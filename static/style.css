@@ -1,0 +1,82 @@
+body{
+ background-color: #F0F0F0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 80px);
+  grid-template-rows: repeat(5, 80px);
+  gap: 0px;
+}
+.cell{
+  border: 2px solid black;
+  text-align: center;
+  position: relative;
+}
+.setCell{
+  border: 2px solid black;
+  text-align: center;
+  position: relative;
+}
+.image {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: block;
+  transform: rotate(0deg);
+  transition: transform 0.5s ease-in-out;
+  opacity: 0.3; /* 画像を半透明に */
+  position: relative;
+}
+.vptext{
+  display: flex;
+  color: blueviolet;
+  font-size: 32px;
+  /* text-align: center; */
+  margin: 0;
+  position: absolute;
+  font-weight:900;
+}
+.card{
+  width: 80px;
+  margin: 8px 4px;
+  border: 5px, solid,#A9A9A9;
+}
+.cardbutton{
+  background: none; /* ボタンの背景を透明にする */
+  border: none; /* ボタンの枠線を消す */
+  padding: 0; /* ボタンのパディングを消す */
+  cursor: pointer; /* カーソルをポインターにする */
+}
+
+.image-button img {
+  object-fit: cover; /* 画像の表示方法を指定 */
+  width: auto;
+  margin: auto;
+}
+
+.selectcard{
+  display: flex;
+}
+
+.dangerArea{
+  border: 2px solid black;
+  text-align: center;
+  background-color:#FFB6C1;
+}
+
+.attack1{
+  background-color: rgb(255, 200, 200);
+}
+
+.attack2{
+  background-color: rgb(255, 100, 100);
+}
+
+.attack3{
+  background-color: rgb(255, 0, 0);
+}
+
+.setarea{
+  margin: 64px auto;
+}

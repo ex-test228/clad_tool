@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+  <link rel="stylesheet" href="/static/style.css">
+  <title>worm page</title>
+</head>
+
+<body>
+  <h1>ワーム型クラッド</h1>
+
+
+  <section>
+    <p>カードを選択</p>
+    <h3>ボルテージ１</h3>
+    <div class="selectcard">
+      <button class="cardbutton" onclick="newActionSet({ attack:[[-1,1],[0,1],[0,-1],[-1,-1]], drop:[[0,1],[0,-1]], move:[null], direction:[2],imgSrc:'/image/vol1_1.png' })"><img src="/image/vol1_1.png" class="card">
+      </button>
+      <button class="cardbutton" onclick="newActionSet({ attack:[[-1,1],[-1,0],[-1,-1]], drop:[[-1,0]], move:[null], direction:[0],imgSrc:'/image/vol1_2.png'})"><img src="/image/vol1_2.png" class="card">
+      </button>
+      <button class="cardbutton" onclick="newActionSet({ attack:[[-1,0],[-2,0],[-2,-1],[-2,1]], drop:[[-2,0]], move:[null], direction:[0],imgSrc:'/image/vol1_3.png' })"><img src="/image/vol1_3.png" class="card">
+      </button>
+      <button class="cardbutton" onclick="newActionSet({ attack:[null], drop:[null], move:[[-1,0]], direction:[1],imgSrc:'/image/vol1_4.png' })"><img src="/image/vol1_4.png" class="card">
+      </button>
+      <button class="cardbutton" onclick="newActionSet({ attack:[null], drop:[null], move:[[-1,0]], direction:[3],imgSrc:'/image/vol1_5.png' })"><img src="/image/vol1_5.png" class="card">
+      </button>
+      <button class="cardbutton" onclick="newActionSet({ attack:[[1,0],[1,1],[1,-1]], drop:[[1,0]], move:[null], direction:[0],imgSrc:'/image/vol1_6.png' })"><img src="/image/vol1_6.png" class="card">
+      </button>
+    </div>
+
+    <h3>ボルテージ2</h3>
+    <div class="selectcard">
+      <button class="cardbutton" onclick="newActionSet({ attack:[[-2,-2],[-2,-1],[-2,0],[-2,1],[-2,2],[-1,-2],[-1,-1],[-1,0],[-1,1],[-1,2]], drop:[[-1,1],[-1,-1]], move:[[-1,0]], direction:[0],imgSrc:'/image/vol2_1.png' })"><img src="/image/vol2_1.png" class="card">
+      </button>
+      <button class="cardbutton" onclick="newActionSet({ attack:[[-1,1],[-1,-1],[0,-1],[0,1],[1,-1],[1,1]], drop:[[1,1],[1,-1]], move:[[-1,0]], direction:[0],imgSrc:'/image/vol2_2.png' })"><img src="/image/vol2_2.png" class="card">
+      </button>
+      <button class="cardbutton" onclick="newActionSet({ attack:[null], drop:[null], move:[[-1,0],[-1,0]], direction:[0],imgSrc:'/image/vol2_3.png' })"><img src="/image/vol2_3.png" class="card">
+      </button>
+    </div>
+
+    <h3>ボルテージ3</h3>
+    <div class="selectcard">
+      <button class="cardbutton" onclick="newActionSet({ attack:[[-2,-2],[-2,-1],[-1,-2],[-1,-1],[0,-2],[0,-1],[1,-2],[1,-1],[2,-2],[2,-1]], drop:[[0,-1],[-1,-1],[1,-1]], move:[null], direction:[1],imgSrc:'/image/vol3_1.png' })"><img src="/image/vol3_1.png" class="card">
+      </button>
+      <button class="cardbutton" onclick="newActionSet({ attack:[[-2,2],[-2,1],[-1,2],[-1,1],[0,2],[0,1],[1,2],[1,1],[2,2],[2,1]], drop:[[0,1],[-1,1],[1,1]], move:[null], direction:[3],imgSrc:'/image/vol3_2.png' })"><img src="/image/vol3_2.png" class="card">
+      </button>
+      <button class="cardbutton" onclick="newActionSet({ attack:[[-2,-2],[-2,-1],[-2,0],[-2,1],[-2,2],[-1,-2],[-1,2],[0,-2],[0,2],[1,-2],[1,2],[2,-2],[2,-1],[2,0],[2,1],[2,2]], drop:[[-1,-1],[-1,1],[1,-1],[1,1]], move:[null], direction:[0],imgSrc:'/image/vol3_3.png' })"><img src="/image/vol3_3.png" class="card">
+      </button>
+    </div>
+  </section>
+
+  <section>
+    <table class="setarea">
+      <caption>セットされているカード</caption>
+      <thead>
+        <th>first</th>
+        <th>second</th>
+        <th>third</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="setCell"><img id="firstSetCard" class="card"></td>
+          <td class="setCell"><img id="secondSetCard" class="card"></td>
+          <td class="setCell"><img id="thirdSetCard" class="card"></td>
+        </tr>
+      </tbody>
+    </table>
+
+
+  </section>
+
+
+  <div class="grid" id="myGrid">
+  </div>
+
+
+  <button onclick="directionChange(1)">右回転</button>
+  <button onclick="directionChange(3)">左回転</button>
+
+  <button onclick="actionPlay()">再生</button>
+
+  <button onclick="reset()">リセット</button>
+
+  <!-- <p id="test">表示</p>
+  <p id="test2">表示</p>
+  <p id="test3">表示</p>
+  <p id="test4">表示</p> -->
+
+
+  <script>
+    const grid = document.getElementById('myGrid');
+    const gridSize = 5; // マス目のサイズ
+    const directionAdjust = [[1, 1], [-1, 1], [-1, -1], [1, -1]] // 上、右、下、左 [row,col]
+
+    let set_position = {
+      index: null,
+      row: null,
+      col: null,
+      direction: null
+    }
+
+    let allActionArray = {
+      firstAction: null,
+      secondAction: null,
+      thirdAction: null
+    }
+
+    function newActionSet({ attack, drop, move, direction, imgSrc }) {
+
+      const image = imgSrc
+      const attackArray = attack
+      const dropArray = drop
+      const moveArray = move
+      const directionArray = direction
+
+      let newAction = {
+        attack: attackArray, drop: dropArray, move: moveArray, direction: directionArray, img: image
+      }
+
+      if (allActionArray.firstAction === null) {
+        allActionArray.firstAction = newAction
+        document.getElementById('firstSetCard').src = image
+      } else if (allActionArray.secondAction === null) {
+        allActionArray.secondAction = newAction
+        document.getElementById('secondSetCard').src = image
+      } else if (allActionArray.thirdAction === null) {
+        allActionArray.thirdAction = newAction
+        document.getElementById('thirdSetCard').src = image
+      } else {
+        console.log('配置できる場所がありません')
+      }
+    }
+
+    
+    function actionPlay() {
+      if(allActionArray.firstAction !== null){
+      oneAction(allActionArray.firstAction)
+      }
+      if(allActionArray.secondAction !== null){
+      oneAction(allActionArray.secondAction)
+      }
+      if(allActionArray.thirdAction !== null){
+      oneAction(allActionArray.thirdAction)
+      }
+    }
+
+
+    // マス目の生成
+    for (let row = 0; row < gridSize; row++) {
+      for (let col = 0; col < gridSize; col++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.row = row;
+        cell.dataset.col = col;
+        cell.dataset.attackcount = 0;
+        cell.dataset.dropcount = 0;
+        let index = (row * 5) + col
+        cell.dataset.index = index
+        grid.appendChild(cell);
+
+      }
+
+    }
+
+    // クラッドの画像を表示
+    function cladAppearance(index) {
+      const imgElements = document.querySelectorAll('.image');
+
+      imgElements.forEach(element => {
+        element.remove();
+      });
+
+      const cladImage = document.createElement('img');
+      cladImage.src = "/image/clad_def.png";
+      cladImage.classList.add('image');
+      cladImage.id = `image${index}`
+      cladImage.dataset.index = index
+
+      let cell = document.querySelector(`[data-index ="${index}"]`)
+      cell.appendChild(cladImage);
+
+    }
+
+
+    // 行と列からマスのインデックスを計算
+    function calcIndex(newRow, newCol) {
+      let index = (newRow * 5) + newCol
+      return index
+    }
+
+    // テスト表示
+    function info() {
+      document.getElementById('test').textContent = '行' + '' + set_position.row
+      document.getElementById('test2').textContent = '列' + '' + set_position.col
+      document.getElementById('test3').textContent = set_position.direction
+      document.getElementById('test4').textContent = set_position.index
+    }
+
+    // クリックしたマスの情報を保存
+    grid.addEventListener('click', function (event) {
+      const index = event.target.dataset.index;
+      cladAppearance(index)
+      const row = event.target.dataset.row;
+      const col = event.target.dataset.col;
+      set_position.index = parseInt(index)
+      set_position.row = parseInt(row)
+      set_position.col = parseInt(col)
+      set_position.direction = 0
+      // info()
+    })
+
+
+    // 向きの情報を更新
+    function directionChange(direction) {
+
+      const newDir = direction
+      const defDir = set_position.direction
+      let moveDir = (defDir + newDir) % 4
+
+      let newDeg = 0
+      if (moveDir == 0) {
+        newDeg = 0
+      } else if (moveDir == 1) {
+        newDeg = 90
+      } else if (moveDir == 3) {
+        newDeg = 270
+      } else if (moveDir == 2) {
+        newDeg = 180
+      }
+
+      set_position.direction = moveDir
+      const elements = document.querySelectorAll('.image');
+
+      elements.forEach(element => {
+        element.style.transform = `rotate(${newDeg}deg)`;
+      });
+
+      // info()
+    }
+
+    function areaGet(row, col) {
+
+      const defRow = set_position.row
+      const defCol = set_position.col
+      const defDir = set_position.direction
+
+      const dirRow = directionAdjust[defDir][0]
+      const dirCol = directionAdjust[defDir][1]
+
+
+      let plsRow = row
+      let plsCol = col
+
+      if (defDir == 1 || defDir == 3) {
+        // console.log('交換')
+        let trade = plsCol
+        plsCol = plsRow
+        plsRow = trade
+        plsRow = plsRow * dirCol
+        plsCol = plsCol * dirRow
+      } else if (defDir == 0 || defDir == 2) {
+        plsRow = plsRow * dirRow
+        plsCol = plsCol * dirCol
+      }
+      const newRow = roopAdjust(defRow + plsRow)
+      const newCol = roopAdjust(defCol + plsCol)
+
+      return [newRow, newCol]
+    }
+
+    function cladMove(array) {
+      const inputArray = array
+
+      const inputRow = inputArray[0]
+      const inputCol = inputArray[1]
+      const returnArray = areaGet(inputRow, inputCol)
+
+      const returnRow = returnArray[0]
+      const returnCol = returnArray[1]
+
+      const newIndex = calcIndex(returnRow, returnCol)
+
+      set_position.row = returnRow
+      set_position.col = returnCol
+      set_position.index = newIndex
+
+      cladAppearance(newIndex)
+    }
+
+    function cladAttack(array) {
+      const inputArray = array
+
+      const inputRow = inputArray[0]
+      const inputCol = inputArray[1]
+      const returnArray = areaGet(inputRow, inputCol)
+
+      const returnRow = returnArray[0]
+      const returnCol = returnArray[1]
+
+      const newIndex = calcIndex(returnRow, returnCol)
+      let element = document.querySelector(`[data-index ="${newIndex}"]`)
+      
+      // element.classList.add('dangerArea');
+      element.dataset.attackcount ++;
+      areaProcess(element)
+    }
+
+    function cladDrop(array) {
+      const inputArray = array
+
+      const inputRow = inputArray[0]
+      const inputCol = inputArray[1]
+      const returnArray = areaGet(inputRow, inputCol)
+
+      const returnRow = returnArray[0]
+      const returnCol = returnArray[1]
+
+
+      const newIndex = calcIndex(returnRow, returnCol)
+      let element = document.querySelector(`[data-index ="${newIndex}"]`)
+      // element.textContent = 'VP'
+      element.dataset.dropcount ++;
+      areaProcess(element)
+    }
+
+    function roopAdjust(RowOrCol) {
+      if (RowOrCol < 0) {
+        RowOrCol += 5
+      } else if (RowOrCol > 4) {
+        RowOrCol -= 5
+      }
+      return RowOrCol
+    }
+
+    function oneAction({ attack, drop, move, direction, imgSrc }) {
+      const image = imgSrc
+      const attackArray = attack
+      const dropArray = drop
+      const moveArray = move
+      const directionArray = direction
+
+      for (let i = 0; i < attackArray.length; i++) {
+        if(attackArray[i] !== null){
+        cladAttack(attackArray[i]);
+        }
+      }
+
+      for (let i = 0; i < dropArray.length; i++) {
+        if(dropArray[i] !== null){
+        cladDrop(dropArray[i]);
+        }
+      }
+
+      for (let i = 0; i < moveArray.length; i++) {
+        if (moveArray[i] !== null) {   
+          cladMove(moveArray[i]);
+        }
+      }
+
+      for (let i = 0; i < directionArray.length; i++) {
+        if(directionArray[i] !== null){
+        directionChange(directionArray[i]);
+        }
+      }
+
+
+      
+    }
+
+    // 盤面の情報をリセット
+    function reset() {
+      let elements = document.querySelectorAll('.cell')
+      elements.forEach(element => {
+        element.classList = 'cell'
+        element.textContent = ''
+        element.dataset.attackcount = 0;
+        element.dataset.dropcount = 0;
+      });
+      allActionArray.firstAction = null
+      document.getElementById('firstSetCard').src = ''
+      allActionArray.secondAction = null
+      document.getElementById('secondSetCard').src = ''
+      allActionArray.thirdAction = null
+      document.getElementById('thirdSetCard').src = ''
+    }
+
+    function areaProcess(thisElement){
+      const element = thisElement
+
+      const attackCount =element.dataset.attackcount
+      if(attackCount == 1){
+        element.classList.add('attack1')
+      }else if(attackCount == 2){
+        element.classList.add('attack2') 
+      }else if(attackCount == 3){
+        element.classList.add('attack3') 
+      }
+
+      const dropCount = element.dataset.dropcount
+      const vpText = document.createElement('p');
+      vpText.classList.add('vptext') 
+      element.innerHTML = '';
+      if(dropCount == 1){
+        vpText.textContent = '1VP'    
+      }else if(dropCount == 2){
+        vpText.textContent = '2VP'
+      }else if(dropCount == 3){
+        vpText.textContent = '3VP'
+      }
+
+      element.appendChild(vpText);
+    }
+
+  </script>
+
+
+</body>
+
+
+</html>
