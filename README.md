@@ -8,3 +8,13 @@ https://sites.google.com/view/hackclad/home
 # つまづいたところ
 盤面のどの位置に敵のコマがあるかなど、マス目を特定するための方法がわからなかった。最終的には、縦、横の座標を配列で表すこととした。
 
+# 使用技術
+python 3.12
+flask
+
+# テスト実行手順
+```
+git clone https://github.com/ex-test228/clad_tool.git
+cd python_flask
+python3 main.py
+```
