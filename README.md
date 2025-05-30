@@ -25,7 +25,7 @@ pip install -r requirements.txt
 
 ディレクトリの移動
 ```
-cd clad_tool/python_flask
+cd clad_tool
 ```
 
 実行  
