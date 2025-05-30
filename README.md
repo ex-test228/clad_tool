@@ -21,14 +21,14 @@ flask
 git clone https://github.com/ex-test228/clad_tool.git
 ```
 
-依存関係のインストール
-```
-pip install -r requirements.txt
-```
-
 ディレクトリの移動
 ```
 cd clad_tool
+```
+
+依存関係のインストール
+```
+pip install -r requirements.txt
 ```
 
 実行  
