@@ -28,7 +28,7 @@ pip install -r requirements.txt
 cd clad_tool/python_flask
 ```
 
-実行
+実行  
 macOS / Linux:
 ```
 python3 main.py
