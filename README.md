@@ -13,8 +13,27 @@ python 3.12
 flask
 
 # テスト実行手順
+リポジトリのクローン
 ```
 git clone https://github.com/ex-test228/clad_tool.git
-cd python_flask
+```
+
+依存関係のインストール
+```
+pip install -r requirements.txt
+```
+
+ディレクトリの移動
+```
+cd clad_tool/python_flask
+```
+
+実行
+macOS / Linux:
+```
 python3 main.py
+```
+Windows:
+```
+python main.py
 ```
